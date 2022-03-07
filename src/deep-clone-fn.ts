@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-base-to-string */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/ban-types */
 
@@ -12,9 +11,8 @@ const copyProperty = (
 	property: string | symbol,
 	ignoreNonConfigurable: boolean
 ) => {
-	// `Function#length` should reflect the parameters of `to` not `from` since we keep its body.
 	// `Function#prototype` is non-writable and non-configurable so can never be modified.
-	if (property === 'length' || property === 'prototype') {
+	if (property === 'prototype') {
 		return;
 	}
 
@@ -30,10 +28,10 @@ const copyProperty = (
 		return;
 	}
 
-	Object.defineProperty(to, property, {
-		...fromDescriptor,
-		value: clone(fromDescriptor?.value),
-	});
+	Object.defineProperty(to, property, fromDescriptor);
+	if (fromDescriptor.writable) {
+		(to as any)[property] = clone((from as any)[property]);
+	}
 };
 
 // `Object.defineProperty()` throws if the property exists, is not configurable and either:
@@ -62,8 +60,15 @@ const changePrototype = (to: object, from: object) => {
 	Object.setPrototypeOf(to, fromPrototype);
 };
 
-const wrappedToString = (withName: string, fromBody: string) =>
-	`/* Wrapped ${withName}*/\n${fromBody}`;
+export interface DeepCloneFunctionOptions {
+	/**
+	Skip modifying [non-configurable properties](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/getOwnPropertyDescriptor#Description) instead of throwing an error.
+	@default false
+	*/
+	readonly ignoreNonConfigurable?: boolean;
+}
+
+const clonedToString = (fromBody: string) => fromBody;
 
 const toStringDescriptor = Object.getOwnPropertyDescriptor(
 	Function.prototype,
@@ -77,10 +82,10 @@ const toStringName = Object.getOwnPropertyDescriptor(
 // We call `from.toString()` early (not lazily) to ensure `from` can be garbage collected.
 // We use `bind()` instead of a closure for the same reason.
 // Calling `from.toString()` early also allows caching it in case `to.toString()` is called several times.
-const changeToString = (to: object, from: object, name: string) => {
-	const withName = name === '' ? '' : `with ${name.trim()}() `;
-	const newToString = wrappedToString.bind(null, withName, from.toString());
-	// Ensure `to.toString.toString` is non-enumerable and has the same `same`
+const changeToString = (to: any, from: any) => {
+	// eslint-disable-next-line @typescript-eslint/no-unsafe-call
+	const newToString = clonedToString.bind(null, from.toString());
+	// Ensure `to.toString.toString` is non-enumerable and has the same `name`
 	Object.defineProperty(newToString, 'name', toStringName);
 	Object.defineProperty(to, 'toString', {
 		...toStringDescriptor,
@@ -88,20 +93,11 @@ const changeToString = (to: object, from: object, name: string) => {
 	});
 };
 
-export interface DeepCloneFunctionOptions {
-	/**
-	Skip modifying [non-configurable properties](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/getOwnPropertyDescriptor#Description) instead of throwing an error.
-	@default false
-	*/
-	readonly ignoreNonConfigurable?: boolean;
-}
-
 export default function deepCloneFunction<F>(
 	fn: F,
 	{ ignoreNonConfigurable = false }: DeepCloneFunctionOptions = {}
 ): F {
 	const fnToClone = fn as any;
-	const { name } = fnToClone;
 
 	function clonedFn(...args: any[]) {
 		// eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call
@@ -113,7 +109,7 @@ export default function deepCloneFunction<F>(
 	}
 
 	changePrototype(clonedFn, fnToClone);
-	changeToString(clonedFn, fnToClone, name);
+	changeToString(clonedFn, fnToClone);
 
 	// eslint-disable-next-line @typescript-eslint/no-unsafe-return
 	return clonedFn as any;
