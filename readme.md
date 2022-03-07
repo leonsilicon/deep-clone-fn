@@ -1,6 +1,6 @@
 # deep-clone-fn
 
-A modification of Sindre Sorhus' excellent [mimic-fn](https://www.npmjs.com/package/mimic-fn) for deep cloning functions.
+A modification of Sindre Sorhus's excellent [mimic-fn](https://www.npmjs.com/package/mimic-fn) for deep cloning functions.
 
 ## Installation
 

@@ -96,26 +96,24 @@ export interface DeepCloneFunctionOptions {
 	readonly ignoreNonConfigurable?: boolean;
 }
 
-export default function deepCloneFunction<
-	ArgumentsType extends unknown[],
-	ReturnType,
-	FunctionType extends (...args: ArgumentsType) => ReturnType
->(
-	fn: FunctionType,
+export default function deepCloneFunction<F>(
+	fn: F,
 	{ ignoreNonConfigurable = false }: DeepCloneFunctionOptions = {}
-): FunctionType {
-	const { name } = fn;
+): F {
+	const fnToClone = fn as any;
+	const { name } = fnToClone;
 
 	function clonedFn(...args: any[]) {
-		return fn(...(args as any));
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call
+		return fnToClone(...(args as any));
 	}
 
-	for (const property of Reflect.ownKeys(fn)) {
-		copyProperty(clonedFn, fn, property, ignoreNonConfigurable);
+	for (const property of Reflect.ownKeys(fnToClone)) {
+		copyProperty(clonedFn, fnToClone, property, ignoreNonConfigurable);
 	}
 
-	changePrototype(clonedFn, fn);
-	changeToString(clonedFn, fn, name);
+	changePrototype(clonedFn, fnToClone);
+	changeToString(clonedFn, fnToClone, name);
 
 	// eslint-disable-next-line @typescript-eslint/no-unsafe-return
 	return clonedFn as any;
