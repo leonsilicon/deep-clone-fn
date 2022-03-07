@@ -2,6 +2,14 @@
 
 A modification of Sindre Sorhus' excellent [mimic-fn](https://www.npmjs.com/package/mimic-fn) for deep cloning functions.
 
+## Installation
+
+```shell
+npm install deep-clone-fn
+```
+
+## Usage
+
 ```typescript
 function f(x) {
   return x;
