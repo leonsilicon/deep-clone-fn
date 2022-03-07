@@ -28,8 +28,9 @@ const copyProperty = (
 		return;
 	}
 
-	Object.defineProperty(to, property, fromDescriptor);
-	if (fromDescriptor.writable) {
+	if (fromDescriptor.writable === false) {
+		Object.defineProperty(to, property, fromDescriptor);
+	} else {
 		(to as any)[property] = clone((from as any)[property]);
 	}
 };
