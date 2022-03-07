@@ -11,6 +11,8 @@ npm install deep-clone-fn
 ## Usage
 
 ```typescript
+import deepCloneFunction from 'deep-clone-fn';
+
 function f(x) {
   return x;
 }
