@@ -2,8 +2,8 @@ import { expect, test } from 'vitest';
 import deepCloneFunction from '~/index.js';
 
 test('successfully deep clones a function', () => {
-	function f() {
-		return [1, 2, 3];
+	function f<T>(x: T): T {
+		return x;
 	}
 
 	f.myProperty = { foo: 'bar' };
@@ -13,5 +13,5 @@ test('successfully deep clones a function', () => {
 	f.myProperty.foo = 'baz';
 
 	expect(g.myProperty).toEqual({ foo: 'bar' });
-	expect(g()).toEqual([1, 2, 3]);
+	expect(g('foo')).toEqual('foo');
 });
