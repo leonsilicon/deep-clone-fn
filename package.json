@@ -8,6 +8,7 @@
 		"url": "https://github.com/leonzalion/deep-clone-fn.git"
 	},
 	"homepage": "https://github.com/leonzalion/deep-clone-fn#readme",
+	"main": "./index.js",
 	"author": {
 		"name": "Leon Si",
 		"email": "contact@leonzalion.com",
