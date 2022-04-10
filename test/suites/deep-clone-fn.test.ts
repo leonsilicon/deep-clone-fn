@@ -1,5 +1,7 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
+
 import { expect, test } from 'vitest';
+
 import deepCloneFunction from '~/index.js';
 
 test('successfully deep clones a function', () => {
@@ -77,7 +79,6 @@ test('should allow classes to be copied', () => {
 	// eslint-disable-next-line @typescript-eslint/no-extraneous-class
 	class FooClass {}
 
-	// eslint-disable-next-line @typescript-eslint/naming-convention
 	const ClonedClass = deepCloneFunction(FooClass);
 
 	expect(ClonedClass.name).toEqual(FooClass.name);

@@ -1,7 +1,6 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/ban-types */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/ban-types */
 
-import rfdc from 'rfdc';
+import * as rfdc from 'rfdc';
 
 const clone = rfdc();
 
