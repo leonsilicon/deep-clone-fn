@@ -8,7 +8,7 @@
 		"url": "https://github.com/leonzalion/deep-clone-fn.git"
 	},
 	"homepage": "https://github.com/leonzalion/deep-clone-fn#readme",
-	"main": "./index.js",
+	"exports": "./src/index.ts",
 	"author": {
 		"name": "Leon Si",
 		"email": "contact@leonzalion.com",
@@ -22,7 +22,7 @@
 		"build": "node-ts ./scripts/build.ts",
 		"test": "vitest run",
 		"lint": "eslint --cache --fix .",
-		"prettier": "prettier --write src",
+		"prettier": "prettier --write .",
 		"tc": "tsc --noEmit"
 	},
 	"devDependencies": {
