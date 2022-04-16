@@ -1,6 +1,6 @@
 # deep-clone-fn
 
-[![npm version](https://badge.fury.io/js/mimic-fn.svg)](https://badge.fury.io/js/mimic-fn)
+[![npm version](https://img.shields.io/npm/v/deep-clone-fn)](https://npmjs.com/package/deep-clone-fn)
 
 A modification of Sindre Sorhus's excellent [mimic-fn](https://www.npmjs.com/package/mimic-fn) for deep cloning functions.
 
